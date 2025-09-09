@@ -52,7 +52,39 @@ tabla_plataforma <- cbind(Frec_Abs_Plataforma = frec_abs_plataforma, Frec_Rel_Pl
 print("Tabla de Frecuencia para Plataforma de Trabajo:")
 print(tabla_plataforma)
 
+# --- PASO 3: TABLA PARA VARIABLE DISCRETA (Tickets_Soporte) ---
 
+# Los primeros dos pasos son idénticos al anterior.
+frec_abs_tickets <- table(datos_programadores$Tickets_Soporte)
+frec_rel_tickets <- prop.table(frec_abs_tickets)
+
+# La función cumsum() (cumulative sum) calcula la suma acumulada de un
+# vector de números. Al aplicarla a mi tabla de frecuencia absoluta,
+# obtengo la frecuencia acumulada.
+frec_acum_tickets <- cumsum(frec_abs_tickets)
+
+# Aplicando cumsum() a la frecuencia relativa, obtengo la frecuencia
+# relativa acumulada.
+frec_rel_acum_tickets <- cumsum(frec_rel_tickets)
+
+# data.frame() es una función más robusta para crear tablas. Me permite
+# definir explícitamente cada columna. Uso as.vector() para "limpiar"
+# los objetos de table() antes de meterlos en el data.frame y evitar
+# posibles problemas de formato.
+tabla_tickets <- data.frame(
+  Frec_Absoluta = as.vector(frec_abs_tickets),
+  Frec_Relativa = round(as.vector(frec_rel_tickets), 3),
+  Frec_Acumulada = as.vector(frec_acum_tickets),
+  Frec_Rel_Acumulada = round(as.vector(frec_rel_acum_tickets), 3)
+)
+
+# Por defecto, las filas de un data.frame se nombran 1, 2, 3...
+# Con rownames() puedo asignarles los nombres de las categorías (en este
+# caso, la cantidad de tickets) para que la tabla sea más fácil de leer.
+rownames(tabla_tickets) <- names(frec_abs_tickets)
+
+print("Tabla de Frecuencia para Tickets de Soporte:")
+print(tabla_tickets)
 
 
 

@@ -86,8 +86,38 @@ rownames(tabla_tickets) <- names(frec_abs_tickets)
 print("Tabla de Frecuencia para Tickets de Soporte:")
 print(tabla_tickets)
 
+# --- PASO 4: TABLA VARIABLE CONTINUA (Tiempo_Conexion) ---
 
+# Para agrupar mi variable continua, uso la función cut(), que "corta" o
+# segmenta una variable numérica en intervalos.
+# - El primer argumento es la columna que quiero cortar.
+# - 'breaks' define los límites de los intervalos. Uso seq() para crear una
+#   secuencia de números desde 20 hasta 140, en pasos de 20.
+# - 'right = FALSE' es un detalle importante: define que los intervalos serán
+#   cerrados a la izquierda y abiertos a la derecha. Ej: [20, 40), [40, 60)...
+#   Con esto evito ambigüedades si un valor cae justo en el límite.
+intervalos_tiempo <- cut(datos_programadores$Tiempo_Conexion,
+                         breaks = seq(20, 140, by = 20),
+                         right = FALSE)
 
+# Una vez que he creado los intervalos con cut(), el resto del proceso es
+# exactamente igual al del Paso 3. Aplico las funciones de frecuencia y
+# armo mi data.frame final.
+frec_abs_tiempo <- table(intervalos_tiempo)
+frec_rel_tiempo <- prop.table(frec_abs_tiempo)
+frec_acum_tiempo <- cumsum(frec_abs_tiempo)
+frec_rel_acum_tiempo <- cumsum(frec_rel_tiempo)
+
+tabla_tiempo <- data.frame(
+  Frec_Absoluta = as.vector(frec_abs_tiempo),
+  Frec_Relativa = round(as.vector(frec_rel_tiempo), 3),
+  Frec_Acumulada = as.vector(frec_acum_tiempo),
+  Frec_Rel_Acumulada = round(as.vector(frec_rel_acum_tiempo), 3)
+)
+rownames(tabla_tiempo) <- names(frec_abs_tiempo)
+
+print("Tabla de Frecuencia para Tiempo de Conexión (en intervalos):")
+print(tabla_tiempo)
 
 
 
